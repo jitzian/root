@@ -1,6 +1,7 @@
 package root.code.challenge
 
 import root.code.challenge.GlobalConstants.Companion.byeByeMessage
+import root.code.challenge.GlobalConstants.Companion.instructions
 import root.code.challenge.GlobalConstants.Companion.maximumMph
 import root.code.challenge.GlobalConstants.Companion.minimumMph
 import root.code.challenge.GlobalConstants.Companion.space
@@ -12,7 +13,9 @@ val driver = mutableMapOf<String, ArrayList<Calculation>>()
 
 fun main() {
     var inputLine: String
-    val listOfUnsortedPairs = mutableListOf<Pair<Int, Long>>()
+    val listOfUnsortedPairs = mutableListOf<Triple<String, Int, Long>>()
+
+    println(instructions)
     captureFromKeyboard@ while (true) {
         inputLine = readLine().toString()
 
@@ -22,11 +25,9 @@ fun main() {
                 println(byeByeMessage)
                 for ((key, totalTrip) in driver) {
                     val (miles, velocity) = CalculatorReport().calculateDistanceAndVelocityPerDriver(totalTrip)
-//                    if (miles in (minimumMph + 1) until maximumMph) {
-//                        println("$key: $miles miles @ $velocity mph")
-                        listOfUnsortedPairs.add(Pair(miles, velocity))
-//                    }
-
+                    if (miles in (minimumMph + 1) until maximumMph) {
+                        listOfUnsortedPairs.add(Triple(key, miles, velocity))
+                    }
                 }
                 printFinalSortedResults(listOfUnsortedPairs)
                 break@captureFromKeyboard
@@ -40,10 +41,10 @@ fun main() {
     }
 }
 
-fun printFinalSortedResults(list: List<Pair<Int, Long>>){
-    for (i in sortListOfPairsFromHighestToLowest(list)){
-        val (miles, velocity) = i
-        println("$miles miles @ $velocity mph")
+fun printFinalSortedResults(list: List<Triple<String, Int, Long>>) {
+    for (i in sortListOfPairsFromHighestToLowest(list)) {
+        val (name, miles, velocity) = i
+        println("$name: $miles miles @ $velocity mph")
     }
 }
 
