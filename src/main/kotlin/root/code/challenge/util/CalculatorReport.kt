@@ -1,27 +1,33 @@
 package root.code.challenge.util
 
-import root.code.challenge.model.Trip
+import root.code.challenge.model.Calculation
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToLong
 
-
-//v = d/t
 class CalculatorReport {
 
-    fun calculateTimeDifferenceInMinutes(trip: Trip): Long {
-
-        val timeStart = trip.startTime
-        val timeEnd = trip.endTime
-
+    fun calculateTimeDifferenceInMinutes(timeStart: String, timeEnd: String): Float {
         val sdf = SimpleDateFormat("HH:mm")
         val dateStart = sdf.parse(timeStart)
         val dateEnd = sdf.parse(timeEnd)
-
-        return TimeUnit.MILLISECONDS.toMinutes(dateEnd.time.plus(-dateStart.time))
-
+        return (TimeUnit.MILLISECONDS.toMinutes(dateEnd.time.plus(-dateStart.time))).toFloat()
     }
 
-    fun calculateVelocity(totalTime: Long, totalDistance: Float): Float = totalDistance / (totalTime / 60)
+    fun calculateDistanceAndVelocityPerDriver(driver: String, listOfCalculations: ArrayList<Calculation>) : String{
+        var totalMiles = 0F
+        var totalTime = 0F
+        val velocity: Long
 
+        for (calculation in listOfCalculations){
+            with(calculation){
+                totalMiles += miles
+                totalTime += timeInHours
+            }
+        }
+
+        velocity = (totalMiles / totalTime).toLong()
+        return "$driver: ${totalMiles.roundToLong()} miles @ $velocity mph"
+    }
 
 }

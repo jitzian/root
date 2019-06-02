@@ -2,16 +2,12 @@ package root.code.challenge
 
 import root.code.challenge.GlobalConstants.Companion.byeByeMessage
 import root.code.challenge.GlobalConstants.Companion.space
-import root.code.challenge.model.TotalTrip
-import root.code.challenge.model.Trip
+import root.code.challenge.model.Calculation
 import root.code.challenge.util.CalculatorReport
-import root.code.challenge.util.safeLet
 
-val setOfDrivers = LinkedHashSet<String>()
-val driverStatisticsMap = mutableMapOf<String, TotalTrip>()
+val driver = mutableMapOf<String, ArrayList<Calculation>>()
 
 fun main() {
-
     var inputLine: String
 
     captureFromKeyboard@ while (true) {
@@ -21,9 +17,10 @@ fun main() {
             //quit
             GlobalConstants.quitCommand.toLowerCase() -> {
                 println(byeByeMessage)
-                for ((key, value) in driverStatisticsMap) {
-                    println("$key = $value")
+                for ((key, totalTrip) in driver) {
+                    println(CalculatorReport().calculateDistanceAndVelocityPerDriver(key, totalTrip))
                 }
+
                 break@captureFromKeyboard
             }
 
@@ -38,25 +35,22 @@ fun main() {
 fun checkInput(input: String) {
     val arrayOfInput = input.split(space)
     when (arrayOfInput.size) {
-        2 -> {
-            setOfDrivers.add(arrayOfInput[1])
-        }
         5 -> {
-            val trip = Trip(arrayOfInput[1],
-                arrayOfInput[2],
-                arrayOfInput[3],
-                arrayOfInput[4].toFloat()
-            )
-
-            if (!driverStatisticsMap.containsKey(arrayOfInput[1])) {
-                driverStatisticsMap[arrayOfInput[1]] = TotalTrip(CalculatorReport().calculateTimeDifferenceInMinutes(trip), arrayOfInput[4].toFloat())
+            if (!driver.containsKey(arrayOfInput[1])) {
+                driver[arrayOfInput[1]] = arrayListOf(
+                    Calculation(
+                        arrayOfInput[4].toFloat(),
+                        (CalculatorReport().calculateTimeDifferenceInMinutes(arrayOfInput[2], arrayOfInput[3])) / 60
+                    )
+                )
             } else {
-                safeLet(driverStatisticsMap[arrayOfInput[1]]?.totalTime?.plus(arrayOfInput[4].toFloat())?.toLong(),
-                    driverStatisticsMap[arrayOfInput[1]]?.totalDistance?.plus(arrayOfInput[4].toFloat())){
-                        time, distance ->
-                    val newTotalTrip = TotalTrip(time, distance)
-                    driverStatisticsMap.replace(arrayOfInput[1], newTotalTrip)
-                }
+                val listOfCalculation = driver[arrayOfInput[1]]
+                val newCalculation = Calculation(
+                    arrayOfInput[4].toFloat(),
+                    (CalculatorReport().calculateTimeDifferenceInMinutes(arrayOfInput[2], arrayOfInput[3])) / 60
+                )
+                listOfCalculation?.add(newCalculation)
+                listOfCalculation?.let { driver.replace(arrayOfInput[1], it) }
             }
 
         }
