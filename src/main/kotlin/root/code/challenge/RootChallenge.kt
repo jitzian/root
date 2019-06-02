@@ -6,12 +6,13 @@ import root.code.challenge.GlobalConstants.Companion.minimumMph
 import root.code.challenge.GlobalConstants.Companion.space
 import root.code.challenge.model.Calculation
 import root.code.challenge.util.CalculatorReport
+import root.code.challenge.util.sortListOfPairsFromHighestToLowest
 
 val driver = mutableMapOf<String, ArrayList<Calculation>>()
 
 fun main() {
     var inputLine: String
-
+    val listOfUnsortedPairs = mutableListOf<Pair<Int, Long>>()
     captureFromKeyboard@ while (true) {
         inputLine = readLine().toString()
 
@@ -20,12 +21,14 @@ fun main() {
             GlobalConstants.quitCommand.toLowerCase() -> {
                 println(byeByeMessage)
                 for ((key, totalTrip) in driver) {
-                    //"$driver: ${totalMiles.roundToLong()} miles @ $velocity mph"
                     val (miles, velocity) = CalculatorReport().calculateDistanceAndVelocityPerDriver(totalTrip)
-                    if (miles in (minimumMph + 1) until maximumMph) {
-                        println("$key: $miles miles @ $velocity mph")
-                    }
+//                    if (miles in (minimumMph + 1) until maximumMph) {
+//                        println("$key: $miles miles @ $velocity mph")
+                        listOfUnsortedPairs.add(Pair(miles, velocity))
+//                    }
+
                 }
+                printFinalSortedResults(listOfUnsortedPairs)
                 break@captureFromKeyboard
             }
 
@@ -34,6 +37,13 @@ fun main() {
                 continue@captureFromKeyboard
             }
         }
+    }
+}
+
+fun printFinalSortedResults(list: List<Pair<Int, Long>>){
+    for (i in sortListOfPairsFromHighestToLowest(list)){
+        val (miles, velocity) = i
+        println("$miles miles @ $velocity mph")
     }
 }
 

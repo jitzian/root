@@ -3,7 +3,7 @@ package root.code.challenge.util
 import root.code.challenge.model.Calculation
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
-import kotlin.math.roundToLong
+import kotlin.math.roundToInt
 
 class CalculatorReport {
 
@@ -14,7 +14,7 @@ class CalculatorReport {
         return (TimeUnit.MILLISECONDS.toMinutes(dateEnd.time.plus(-dateStart.time))).toFloat()
     }
 
-    fun calculateDistanceAndVelocityPerDriver(listOfCalculations: ArrayList<Calculation>) : Pair<Long, Long>{
+    fun calculateDistanceAndVelocityPerDriver(listOfCalculations: ArrayList<Calculation>) : Pair<Int, Long> {
         var totalMiles = 0F
         var totalTime = 0F
         val velocity: Long
@@ -28,8 +28,7 @@ class CalculatorReport {
 
         velocity = (totalMiles / totalTime).toLong()
 
-//        return "$driver: ${totalMiles.roundToLong()} miles @ $velocity mph"
-        return Pair(totalMiles.roundToLong(), velocity)
+        return Pair(totalMiles.roundToInt(), velocity)
     }
 
 }
