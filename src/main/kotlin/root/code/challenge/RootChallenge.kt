@@ -1,6 +1,8 @@
 package root.code.challenge
 
 import root.code.challenge.GlobalConstants.Companion.byeByeMessage
+import root.code.challenge.GlobalConstants.Companion.maximumMph
+import root.code.challenge.GlobalConstants.Companion.minimumMph
 import root.code.challenge.GlobalConstants.Companion.space
 import root.code.challenge.model.Calculation
 import root.code.challenge.util.CalculatorReport
@@ -18,9 +20,12 @@ fun main() {
             GlobalConstants.quitCommand.toLowerCase() -> {
                 println(byeByeMessage)
                 for ((key, totalTrip) in driver) {
-                    println(CalculatorReport().calculateDistanceAndVelocityPerDriver(key, totalTrip))
+                    //"$driver: ${totalMiles.roundToLong()} miles @ $velocity mph"
+                    val (miles, velocity) = CalculatorReport().calculateDistanceAndVelocityPerDriver(totalTrip)
+                    if (miles in (minimumMph + 1) until maximumMph) {
+                        println("$key: $miles miles @ $velocity mph")
+                    }
                 }
-
                 break@captureFromKeyboard
             }
 

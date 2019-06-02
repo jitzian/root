@@ -14,7 +14,7 @@ class CalculatorReport {
         return (TimeUnit.MILLISECONDS.toMinutes(dateEnd.time.plus(-dateStart.time))).toFloat()
     }
 
-    fun calculateDistanceAndVelocityPerDriver(driver: String, listOfCalculations: ArrayList<Calculation>) : String{
+    fun calculateDistanceAndVelocityPerDriver(listOfCalculations: ArrayList<Calculation>) : Pair<Long, Long>{
         var totalMiles = 0F
         var totalTime = 0F
         val velocity: Long
@@ -27,7 +27,9 @@ class CalculatorReport {
         }
 
         velocity = (totalMiles / totalTime).toLong()
-        return "$driver: ${totalMiles.roundToLong()} miles @ $velocity mph"
+
+//        return "$driver: ${totalMiles.roundToLong()} miles @ $velocity mph"
+        return Pair(totalMiles.roundToLong(), velocity)
     }
 
 }
